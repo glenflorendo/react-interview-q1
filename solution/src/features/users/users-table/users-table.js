@@ -1,6 +1,19 @@
 import { useContext } from "react";
 import { UsersContext } from "../users-context";
 
+const EmptyTableBody = () => {
+  return (
+    <tr>
+      <td colSpan={2}>
+        <div>
+          <strong>Nothing to show!</strong>
+          <p>This list will automatically update once users complete the form above.</p>
+        </div>
+      </td>
+    </tr>
+  );
+};
+
 /**
  * UsersTable component representing a table for all users, including their names and locations.
  *
@@ -22,12 +35,12 @@ export const UsersTable = () => {
 
       {/* Body */}
       <tbody>
-      {users.map((user, index) => (
+      {users?.length > 0 ? (users.map((user, index) => (
         <tr key={`${index}-${user.name}-${user.location}`}>
           <td>{user.name}</td>
           <td>{user.location}</td>
         </tr>
-      ))}
+      ))) : <EmptyTableBody />}
       </tbody>
     </table>
   );
