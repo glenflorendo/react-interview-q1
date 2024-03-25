@@ -1,6 +1,18 @@
+import { useContext } from "react";
+import { UsersContext } from "../users-context";
+
+/**
+ * UsersTable component representing a table for all users, including their names and locations.
+ *
+ * @component
+ * @returns {JSX.Element}
+ */
 export const UsersTable = () => {
+  const users = useContext(UsersContext);
+
   return (
-    <table>
+    <table id="users-table">
+      {/* Header */}
       <thead>
       <tr>
         <th scope="col">Name</th>
@@ -8,15 +20,14 @@ export const UsersTable = () => {
       </tr>
       </thead>
 
+      {/* Body */}
       <tbody>
-      <tr>
-        <td>Name 1</td>
-        <td>Location 1</td>
-      </tr>
-      <tr>
-        <td>Name 2</td>
-        <td>Location 2</td>
-      </tr>
+      {users.map((user, index) => (
+        <tr key={`${index}-${user.name}-${user.location}`}>
+          <td>{user.name}</td>
+          <td>{user.location}</td>
+        </tr>
+      ))}
       </tbody>
     </table>
   );
