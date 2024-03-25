@@ -1,5 +1,6 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UsersDispatchContext } from "../users-context";
+import { getLocations } from "../../../mock-api/apis";
 
 /**
  * UsersForm component representing a form for adding new users.
@@ -9,6 +10,8 @@ import { UsersDispatchContext } from "../users-context";
  */
 export const UsersForm = () => {
   const dispatch = useContext(UsersDispatchContext);
+
+  const [locations, setLocations] = useState([]);
 
   /**
    * Handles form submission.
@@ -24,6 +27,19 @@ export const UsersForm = () => {
     event.target.reset();
   };
 
+
+  /**
+   * On mount
+   */
+  useEffect(() => {
+    /**
+     * Fetch locations data
+     */
+    getLocations()
+      .then(setLocations)
+      .catch(console.error);
+  }, []);
+
   return (
     <form onSubmit={onFormSubmit}>
       {/* Input field to enter user's name */}
@@ -33,10 +49,7 @@ export const UsersForm = () => {
       {/* Dropdown to select user's location */}
       <label htmlFor="location">Location</label>
       <select id="location" name="location">
-        <option value="Canada">Canada</option>
-        <option value="China">China</option>
-        <option value="USA">USA</option>
-        <option value="Brazil">Brazil</option>
+        {locations.map((location) => <option key={location}>{location}</option>)}
       </select>
 
       {/* Button to clear the form */}
