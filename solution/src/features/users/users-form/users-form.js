@@ -21,6 +21,7 @@ export const UsersForm = () => {
     const data = Object.fromEntries(form.entries());
 
     dispatch({ type: "add", data });
+    event.target.reset();
   };
 
   return (
