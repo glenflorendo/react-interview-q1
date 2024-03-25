@@ -3,6 +3,18 @@ import { UsersDispatchContext } from "../users-context";
 import { getLocations, isNameValid } from "../../../mock-api/apis";
 import { debounce } from "../../../utilities";
 
+const NAME_INPUT_STATES = {
+  loading: "loading",
+  error: "error",
+  success: "success",
+};
+
+const NAME_INPUT_STATE_MSG = {
+  [NAME_INPUT_STATES.loading]: "Checking name...",
+  [NAME_INPUT_STATES.error]: "This name has already been taken.",
+  [NAME_INPUT_STATES.success]: "This name is available!",
+};
+
 /**
  * Debounced name validation to reduce API calls
  * @type {function(...[*]): Promise<*>}
@@ -22,7 +34,16 @@ export const UsersForm = () => {
   const dispatch = useContext(UsersDispatchContext);
 
   const [isFormValid, setFormValid] = useState(false);
+  const [nameState, setNameState] = useState(null);
   const [locations, setLocations] = useState([]);
+
+  /**
+   * Reset form.
+   */
+  const onFormReset = () => {
+    setFormValid(false);
+    setNameState(null);
+  };
 
   /**
    * Handles form submission.
@@ -56,11 +77,28 @@ export const UsersForm = () => {
    */
   const onNameInputChange = async (event) => {
     setFormValid(false);
+    setNameState(null);
 
     const name = event.target.value;
+
+    if (!name) {
+      setNameState(null);
+      return;
+    }
+
+    setNameState("loading");
     debouncedValidateName(name)
-      .then(setFormValid) // Set the form validity based on the validation result
-      .catch(console.error);
+      .then((isValid) => {
+        isValid
+          ? setNameState("success")
+          : setNameState("error");
+        setFormValid(isValid);
+      })
+      .catch((error) => {
+        setNameState(null);
+        setFormValid(false);
+        console.error(error);
+      });
   };
 
   /**
@@ -76,10 +114,11 @@ export const UsersForm = () => {
   }, []);
 
   return (
-    <form onSubmit={onFormSubmit}>
+    <form onSubmit={onFormSubmit} onReset={onFormReset}>
       {/* Input field to enter user's name */}
       <label htmlFor="name">Name</label>
       <input id="name" name="name" type="text" onChange={onNameInputChange} required />
+      {nameState && (<div>{NAME_INPUT_STATE_MSG[nameState]}</div>)}
 
       {/* Dropdown to select user's location */}
       <label htmlFor="location">Location</label>
