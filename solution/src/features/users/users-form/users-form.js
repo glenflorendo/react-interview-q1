@@ -11,13 +11,20 @@ import { getLocations, isNameValid } from "../../../mock-api/apis";
 export const UsersForm = () => {
   const dispatch = useContext(UsersDispatchContext);
 
+  const [isFormValid, setFormValid] = useState(false);
   const [locations, setLocations] = useState([]);
 
   /**
    * Handles form submission.
+   *
+   * If the form is valid, parse the form data and dispatch the add action. Then, reset and invalidate the form to
+   * prepare for the next submission.
+   *
    * @param event
    */
   const onFormSubmit = (event) => {
+    if (!isFormValid) return;
+
     event.preventDefault();
 
     const form = new FormData(event.target);
@@ -25,19 +32,28 @@ export const UsersForm = () => {
 
     dispatch({ type: "add", data });
     event.target.reset();
+    setFormValid(false);
   };
 
   /**
    * Handles name input change.
+   *
+   * On every change, invalidate the form. If the name is empty, do nothing. Otherwise, validate the name and set
+   * the form validity accordingly.
+   *
    * @param event
    * @returns {Promise<void>}
    */
   const onNameInputChange = async (event) => {
+    setFormValid(false);
+
     const name = event.target.value;
+
+    if (!name) return;
     const isValid = await isNameValid(name);
     isValid
-      ? console.debug("Name is valid:", name)
-      : console.debug("Name is invalid:", name);
+      ? setFormValid(true)
+      : setFormValid(false);
   };
 
   /**
@@ -68,6 +84,6 @@ export const UsersForm = () => {
       <button type="reset">Clear</button>
 
       {/* Button to submit the form */}
-      <button type="submit">Add</button>
+      <button type="submit" disabled={!isFormValid}>Add</button>
     </form>);
 };
