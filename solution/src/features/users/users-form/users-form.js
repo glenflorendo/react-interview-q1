@@ -27,7 +27,6 @@ export const UsersForm = () => {
     event.target.reset();
   };
 
-
   /**
    * On mount
    */
@@ -44,11 +43,11 @@ export const UsersForm = () => {
     <form onSubmit={onFormSubmit}>
       {/* Input field to enter user's name */}
       <label htmlFor="name">Name</label>
-      <input id="name" name="name" type="text" />
+      <input id="name" name="name" type="text" required />
 
       {/* Dropdown to select user's location */}
       <label htmlFor="location">Location</label>
-      <select id="location" name="location">
+      <select id="location" name="location" required>
         {locations.map((location) => <option key={location}>{location}</option>)}
       </select>
 
