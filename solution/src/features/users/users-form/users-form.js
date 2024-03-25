@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { UsersDispatchContext } from "../users-context";
 import { getLocations, isNameValid } from "../../../mock-api/apis";
 import { debounce } from "../../../utilities";
+import "./users-form.css";
 
 const NAME_INPUT_STATES = {
   loading: "loading",
@@ -114,22 +115,34 @@ export const UsersForm = () => {
   }, []);
 
   return (
-    <form onSubmit={onFormSubmit} onReset={onFormReset}>
-      {/* Input field to enter user's name */}
-      <label htmlFor="name">Name</label>
-      <input id="name" name="name" type="text" onChange={onNameInputChange} required />
-      {nameState && (<div>{NAME_INPUT_STATE_MSG[nameState]}</div>)}
+    <form id="users-form" onSubmit={onFormSubmit} onReset={onFormReset}>
+      <div className="container">
+        {/* Input field to enter user's name */}
+        <div className="input-group">
+          <label htmlFor="name">Name</label>
+          <div>
+            <input id="name" name="name" type="text" onChange={onNameInputChange} required />
+            {/* Input message */}
+            {nameState && (
+              <div className={`message ${NAME_INPUT_STATES[nameState]}`}>{NAME_INPUT_STATE_MSG[nameState]}</div>)}
+          </div>
+        </div>
 
-      {/* Dropdown to select user's location */}
-      <label htmlFor="location">Location</label>
-      <select id="location" name="location" required>
-        {locations.map((location) => <option key={location}>{location}</option>)}
-      </select>
+        {/* Dropdown to select user's location */}
+        <div className="input-group">
+          <label htmlFor="location">Location</label>
+          <select id="location" name="location" required>
+            {locations.map((location) => <option key={location}>{location}</option>)}
+          </select>
+        </div>
+      </div>
 
-      {/* Button to clear the form */}
-      <button type="reset">Clear</button>
+      <div className="button-group">
+        {/* Button to clear the form */}
+        <button type="reset">Clear</button>
 
-      {/* Button to submit the form */}
-      <button type="submit" disabled={!isFormValid}>Add</button>
+        {/* Button to submit the form */}
+        <button type="submit" disabled={!isFormValid}>Add</button>
+      </div>
     </form>);
 };
