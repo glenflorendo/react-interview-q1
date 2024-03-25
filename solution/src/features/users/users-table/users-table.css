@@ -1,0 +1,32 @@
+table#users-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.25rem;
+}
+
+table#users-table th {
+  background-color: #f8f8f8;
+  font-weight: bold;
+  padding: 0.625rem;
+  text-align: left;
+  border-bottom: 0.0625rem solid #ccc;
+}
+
+table#users-table td {
+  padding: 0.625rem;
+  border-bottom: 0.0625rem solid #ccc;
+}
+
+table#users-table tr:nth-child(even) {
+  background-color: #f8f8f8;
+}
+
+table#users-table .empty-user-list-message {
+  font-size: 14px;
+  text-align: center;
+  padding: 1rem;
+}
+
+table#users-table .empty-user-list-message p {
+  margin: 0;
+}

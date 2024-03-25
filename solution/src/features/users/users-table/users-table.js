@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import { UsersContext } from "../users-context";
+import "./users-table.css";
 
 const EmptyTableBody = () => {
   return (
     <tr>
       <td colSpan={2}>
-        <div>
+        <div className="empty-user-list-message">
           <strong>Nothing to show!</strong>
           <p>This list will automatically update once users complete the form above.</p>
         </div>
