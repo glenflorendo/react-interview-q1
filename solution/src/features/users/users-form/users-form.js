@@ -1,6 +1,16 @@
 import { useContext, useEffect, useState } from "react";
 import { UsersDispatchContext } from "../users-context";
 import { getLocations, isNameValid } from "../../../mock-api/apis";
+import { debounce } from "../../../utilities";
+
+/**
+ * Debounced name validation to reduce API calls
+ * @type {function(...[*]): Promise<*>}
+ */
+const debouncedValidateName = debounce(async (name) => {
+  if (!name) return false;
+  return await isNameValid(name);
+}, 300);
 
 /**
  * UsersForm component representing a form for adding new users.
@@ -48,12 +58,9 @@ export const UsersForm = () => {
     setFormValid(false);
 
     const name = event.target.value;
-
-    if (!name) return;
-    const isValid = await isNameValid(name);
-    isValid
-      ? setFormValid(true)
-      : setFormValid(false);
+    debouncedValidateName(name)
+      .then(setFormValid) // Set the form validity based on the validation result
+      .catch(console.error);
   };
 
   /**
